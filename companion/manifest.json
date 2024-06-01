@@ -1,12 +1,12 @@
 {
-	"id": "wled-ws",
-	"name": "wled-ws",
-	"shortname": "wled",
-	"description": "Module for controlling WLED devices",
+	"id": "nrk-sofie-chef-websocket",
+	"name": "nrk-sofie-chef-websocket",
+	"shortname": "sofie-chef-websocket",
+	"description": "Module for controlling NRK Sofie Chef devices",
 	"version": "1.0.0",
 	"license": "MIT",
-	"repository": "git+https://github.com/bitfocus/companion-module-wled-ws.git",
-	"bugs": "https://github.com/bitfocus/companion-module-wled-ws/issues",
+	"repository": "git+https://github.com/bitfocus/companion-module-nrk-sofie-chef-websocket.git",
+	"bugs": "https://github.com/bitfocus/companion-module-nrk-sofie-chef/issues",
 	"maintainers": [
 		{
 			"name": "Leon Reucher",
@@ -20,7 +20,7 @@
 		"apiVersion": "0.0.0",
 		"entrypoint": "../index.js"
 	},
-	"manufacturer": "WLED",
-	"products": ["WLED"],
-	"keywords": ["WLED"]
+	"manufacturer": "NRK",
+	"products": ["Sofie Chef"],
+	"keywords": ["Sofie", "Chef", "Websocket", "Video", "Software", "Graphics"]
 }
