@@ -1,10 +1,10 @@
-import { InstanceBase, runEntrypoint, InstanceStatus, combineRgb } from '@companion-module/base'
+import { InstanceBase, runEntrypoint, InstanceStatus, Regex } from '@companion-module/base'
 import WebSocket from 'ws'
 import { upgradeScripts } from './upgrade.js'
 import { setupActions } from './actions.js'
 import { setupFeedbacks } from './feedbacks.js'
 
-class WLEDInstance extends InstanceBase {
+class SofieChefInstance extends InstanceBase {
 	isInitialized = false
 
 	async init(config) {
@@ -13,10 +13,7 @@ class WLEDInstance extends InstanceBase {
 		this.initWebSocket()
 		this.isInitialized = true
 
-		this.segmentCount = 0;
-		this.segments = [];
-		this.isOn = false;
-		this.brightness = 0;
+		this.windows = []
 
 		this.initActions()
 		this.initFeedbacks()
@@ -56,9 +53,12 @@ class WLEDInstance extends InstanceBase {
 			this.reconnect_timer = null
 		}
 
-		const url = "ws://" + this.config.targetIp + "/ws";
+		const url = 'ws://' + this.config.targetIp + ':' + this.config.targetPort + '/'
 		if (!url || !this.config.targetIp) {
 			this.updateStatus(InstanceStatus.BadConfig, `IP address is missing`)
+			return
+		} else if (!url || !this.config.targetPort) {
+			this.updateStatus(InstanceStatus.BadConfig, `Port is missing`)
 			return
 		}
 
@@ -71,7 +71,7 @@ class WLEDInstance extends InstanceBase {
 		this.ws = new WebSocket(url)
 
 		this.ws.on('open', () => {
-			this.updateStatus(InstanceStatus.Ok);
+			this.updateStatus(InstanceStatus.Ok)
 		})
 		this.ws.on('close', (code) => {
 			this.updateStatus(InstanceStatus.Disconnected, `Connection closed with code ${code}`)
@@ -85,48 +85,46 @@ class WLEDInstance extends InstanceBase {
 		})
 	}
 
-
-	parseWLEDState(data) {
-		this.isOn = data.on;
-		this.brightness = data.bri;
-		if(this.segmentCount != data.seg.length) {
-			this.segmentCount = data.seg.length;
-			this.initActions();
-			this.initFeedbacks();
-		}
-		this.segments = data.seg;
-		this.checkFeedbacks();
+	parseSofieChefReply(data) {
+		// TODO(Peter): Do something here
 	}
 
-	parseWLEDInfo(data) {
-		this.rgbw = data.leds.rgbw;
+	parseSofieChefStatus(data) {
+		this.log('debug', 'Windows: ' + Object.keys(data.status.windows).join())
+		this.windows = Object.keys(data.status.windows)
+
+		this.initActions()
 	}
 
 	messageReceivedFromWebSocket(data) {
+		this.log('debug', `WebSocket data: ` + data)
 		let msgValue = null
 		try {
 			msgValue = JSON.parse(data)
 		} catch (e) {
 			msgValue = data
 		}
-		if (msgValue.state != null) {
-			this.parseWLEDState(msgValue.state);
-		}
-		if (msgValue.info != null) {
-			this.parseWLEDInfo(msgValue.info);
+		if (msgValue.type != null) {
+			if (msgValue.type === 'reply') {
+				this.parseSofieChefReply(msgValue)
+			} else if (msgValue.type === 'status') {
+				this.parseSofieChefStatus(msgValue)
+			} else {
+				this.log('error', `Unknown message type - webSocket data: ` + data)
+			}
 		}
 	}
 
-	getSegmentChoices() {
-		var dropdownChoices = [];
-		for (let i = 0; i < this.segmentCount; i++) {
+	getWindowChoices() {
+		var dropdownChoices = []
+		for (let i = 0; i < this.windows.length; i++) {
 			const choice = {
-				id: i,
-				label: `Segment ${i + 1}`,
-			};
-			dropdownChoices.push(choice);
+				id: this.windows[i],
+				label: `Window ${this.windows[i]}`,
+			}
+			dropdownChoices.push(choice)
 		}
-		return dropdownChoices;
+		return dropdownChoices
 	}
 
 	getConfigFields() {
@@ -134,8 +132,23 @@ class WLEDInstance extends InstanceBase {
 			{
 				type: 'textinput',
 				id: 'targetIp',
-				label: 'WLED IP address',
+				label: 'Sofie Chef IP address',
 				width: 12,
+				regex: Regex.IP,
+			},
+			{
+				type: 'textinput',
+				id: 'targetPort',
+				label: 'Port number',
+				width: 6,
+				default: '5271',
+				regex: Regex.PORT,
+			},
+			{
+				type: 'textinput',
+				id: 'apiKey',
+				label: 'API Key',
+				width: 6,
 			},
 			{
 				type: 'checkbox',
@@ -144,17 +157,17 @@ class WLEDInstance extends InstanceBase {
 				tooltip: 'Reconnect on WebSocket error (after 5 secs)',
 				width: 6,
 				default: true,
-			}
+			},
 		]
 	}
 
 	initFeedbacks() {
-		setupFeedbacks(this);
+		setupFeedbacks(this)
 	}
 
 	initActions() {
-		setupActions(this);
+		setupActions(this)
 	}
 }
 
-runEntrypoint(WLEDInstance, upgradeScripts)
+runEntrypoint(SofieChefInstance, upgradeScripts)
