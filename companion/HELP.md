@@ -13,4 +13,3 @@ Simply type in the IP and port of the Sofie Chef in the module configuration and
 - Stop window
 
 ### Supported feedbacks
-

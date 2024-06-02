@@ -7,7 +7,7 @@ export function setupActions(instance) {
 				{
 					type: 'dropdown',
 					label: 'Window',
-					id: 'window',
+					id: 'windowId',
 					default: 'default',
 					choices: instance.getWindowChoices(),
 				},
@@ -18,14 +18,7 @@ export function setupActions(instance) {
 				},
 			],
 			callback: async (action, context) => {
-				instance.ws.send(
-					JSON.stringify({
-						type: 'playurl',
-						msgId: 1,
-						windowId: action.options.window,
-						url: action.options.url,
-					})
-				)
+				instance.sendWebSocketJSON('playurl', action.options)
 			},
 		},
 		restart: {
@@ -35,19 +28,13 @@ export function setupActions(instance) {
 				{
 					type: 'dropdown',
 					label: 'Window',
-					id: 'window',
+					id: 'windowId',
 					default: 'default',
 					choices: instance.getWindowChoices(),
 				},
 			],
 			callback: async (action, context) => {
-				instance.ws.send(
-					JSON.stringify({
-						type: 'restart',
-						msgId: 1,
-						windowId: action.options.window,
-					})
-				)
+				instance.sendWebSocketJSON('restart', action.options)
 			},
 		},
 		stop: {
@@ -57,19 +44,13 @@ export function setupActions(instance) {
 				{
 					type: 'dropdown',
 					label: 'Window',
-					id: 'window',
+					id: 'windowId',
 					default: 'default',
 					choices: instance.getWindowChoices(),
 				},
 			],
 			callback: async (action, context) => {
-				instance.ws.send(
-					JSON.stringify({
-						type: 'stop',
-						msgId: 1,
-						windowId: action.options.window,
-					})
-				)
+				instance.sendWebSocketJSON('stop', action.options)
 			},
 		},
 	})
