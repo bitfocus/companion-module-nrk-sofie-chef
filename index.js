@@ -86,6 +86,9 @@ class SofieChefInstance extends InstanceBase {
 	}
 
 	parseSofieChefReply(data) {
+		if (data.error != null) {
+			this.log('error', data.error)
+		}
 		// TODO(Peter): Do something here
 	}
 
@@ -115,6 +118,22 @@ class SofieChefInstance extends InstanceBase {
 		}
 	}
 
+	sendWebSocketJSON(type, options) {
+		var msg = {}
+		msg['msgId'] = 1
+		if (this.config.apiKey != null && this.config.apiKey !== '') {
+			msg['apiKey'] = this.config.apiKey
+		}
+		msg['type'] = type
+		this.log('debug', `Options: ` + JSON.stringify(options))
+		for (let option of Object.keys(options)) {
+			this.log('debug', `Option: ` + JSON.stringify(option))
+			msg[option] = options[option]
+		}
+		this.log('debug', `WebSocket sending data: ` + JSON.stringify(msg))
+		this.ws.send(JSON.stringify(msg))
+	}
+
 	getWindowChoices() {
 		var dropdownChoices = []
 		for (let i = 0; i < this.windows.length; i++) {
@@ -140,6 +159,7 @@ class SofieChefInstance extends InstanceBase {
 				type: 'textinput',
 				id: 'targetPort',
 				label: 'Port number',
+				tooltip: 'WebSocket port is configured apiPort plus one',
 				width: 6,
 				default: '5271',
 				regex: Regex.PORT,
@@ -147,7 +167,7 @@ class SofieChefInstance extends InstanceBase {
 			{
 				type: 'textinput',
 				id: 'apiKey',
-				label: 'API Key',
+				label: 'API Key (Pre-shared key)',
 				width: 6,
 			},
 			{
