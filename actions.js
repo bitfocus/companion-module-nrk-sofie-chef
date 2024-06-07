@@ -1,7 +1,7 @@
 export function setupActions(instance) {
 	instance.setActionDefinitions({
-		play: {
-			name: 'Play',
+		playUrl: {
+			name: 'Play URL',
 			description: 'Make a window play an URL',
 			options: [
 				{
