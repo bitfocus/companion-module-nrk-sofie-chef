@@ -53,5 +53,26 @@ export function setupActions(instance) {
 				instance.sendWebSocketJSON('stop', action.options)
 			},
 		},
+		execute: {
+			name: 'Execute',
+			description: 'Make a window execute javascript',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Window',
+					id: 'windowId',
+					default: 'default',
+					choices: instance.getWindowChoices(),
+				},
+				{
+					type: 'textinput',
+					label: 'JavaScript Code',
+					id: 'jsCode',
+				},
+			],
+			callback: async (action, context) => {
+				instance.sendWebSocketJSON('execute', action.options)
+			},
+		},
 	})
 }
