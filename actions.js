@@ -16,6 +16,11 @@ export function setupActions(instance) {
 					label: 'URL',
 					id: 'url',
 				},
+				{
+					type: 'textinput',
+					label: 'JavaScript Code',
+					id: 'jsCode',
+				},
 			],
 			callback: async (action, context) => {
 				instance.sendWebSocketJSON('playurl', action.options)
