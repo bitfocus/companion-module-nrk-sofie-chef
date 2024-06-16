@@ -15,7 +15,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/bitfocus/companion-module-nrk-sofie-chef-websocket.git"
+		"url": "git+https://github.com/bitfocus/companion-module-nrk-sofie-chef.git"
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^1.0.2"
