@@ -15,15 +15,19 @@ export function setupActions(instance) {
 					type: 'textinput',
 					label: 'URL',
 					id: 'url',
+					useVariables: true,
 				},
 				{
 					type: 'textinput',
 					label: 'JavaScript Code',
 					id: 'jsCode',
+					useVariables: true,
 				},
 			],
 			callback: async (action, context) => {
-				instance.sendWebSocketJSON('playurl', action.options)
+				const urlValue = await context.parseVariablesInString(action.options.url)
+				const jsCodeValue = await context.parseVariablesInString(action.options.jsCode)
+				instance.sendWebSocketJSON('playurl', { windowId: action.options.windowId, url: urlValue, jsCode: jsCodeValue })
 			},
 		},
 		restart: {
@@ -73,10 +77,12 @@ export function setupActions(instance) {
 					type: 'textinput',
 					label: 'JavaScript Code',
 					id: 'jsCode',
+					useVariables: true,
 				},
 			],
 			callback: async (action, context) => {
-				instance.sendWebSocketJSON('execute', action.options)
+				const jsCodeValue = await context.parseVariablesInString(action.options.jsCode)
+				instance.sendWebSocketJSON('execute', { windowId: action.options.windowId, jsCode: jsCodeValue })
 			},
 		},
 	})
