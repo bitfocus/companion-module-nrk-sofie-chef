@@ -3,7 +3,7 @@
 	"name": "nrk-sofie-chef-websocket",
 	"shortname": "sofie-chef-websocket",
 	"description": "Module for controlling NRK Sofie Chef devices",
-	"version": "2.0.0",
+	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-nrk-sofie-chef.git",
 	"bugs": "https://github.com/bitfocus/companion-module-nrk-sofie-chef/issues",
