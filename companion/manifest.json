@@ -1,9 +1,9 @@
 {
-	"id": "nrk-sofie-chef-websocket",
-	"name": "nrk-sofie-chef-websocket",
-	"shortname": "sofie-chef-websocket",
+	"id": "nrk-sofie-chef",
+	"name": "nrk-sofie-chef",
+	"shortname": "sofie-chef",
 	"description": "Module for controlling NRK Sofie Chef devices",
-	"version": "1.0.0",
+	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-nrk-sofie-chef.git",
 	"bugs": "https://github.com/bitfocus/companion-module-nrk-sofie-chef/issues",
@@ -12,7 +12,7 @@
 			"name": "Peter Newman"
 		}
 	],
-	"legacyIds": [],
+	"legacyIds": ["nrk-sofie-chef-websocket"],
 	"runtime": {
 		"type": "node18",
 		"api": "nodejs-ipc",
